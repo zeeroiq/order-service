@@ -1,22 +1,25 @@
 package com.shri.orderservice.domain;
 
 import com.shri.orderservice.domain.enums.OrderStatusEnum;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @Builder
 @Entity
-public class BeerOrder extends BaseEntity{
+public class BeerOrder extends BaseEntity {
 
     private String customerReference;
     @ManyToOne
