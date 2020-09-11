@@ -6,17 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
+import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BeerOrder extends BaseItem {
+public class BeerOrderDto extends BaseItem {
 
+    private UUID customerId;
     private String customerReference;
-    private Customer customer;
-    private Set<BeerOrderLine> beerOrderLines;
-    private OrderStatusEnum orderStatus = OrderStatusEnum.NEW;
+    private CustomerDto customerDto;
+    private List<BeerOrderLineDto> beerOrderLineDtos;
+    private OrderStatusEnum orderStatus;
     private String orderStatusCallbackUrl;
 }

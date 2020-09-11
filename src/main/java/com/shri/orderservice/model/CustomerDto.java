@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Customer extends BaseItem {
+public class CustomerDto extends BaseItem {
 
     private String customerName;
     private UUID apiKey;
