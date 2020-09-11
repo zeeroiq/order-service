@@ -17,5 +17,8 @@ import java.util.UUID;
 @Builder
 public class BeerOrderLineDto extends BaseItem {
 
+    private UUID uuid;
     private String name;
+    private String upc;
+    private Integer orderQuantity = 0;
 }

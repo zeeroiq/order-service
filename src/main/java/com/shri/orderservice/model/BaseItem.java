@@ -1,5 +1,7 @@
 package com.shri.orderservice.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,10 +14,15 @@ import java.util.UUID;
 @AllArgsConstructor
 public class BaseItem {
 
-
-    private UUID id;
+    @JsonProperty("id")
+    private UUID id = null;
+    @JsonProperty("version")
     private Long version;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ", shape = JsonFormat.Shape.STRING)
+    @JsonProperty("addedOn")
     private Timestamp addedOn;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ", shape = JsonFormat.Shape.STRING)
+    @JsonProperty("lastModifiedOn")
     private Timestamp lastModifiedOn;
 
 }

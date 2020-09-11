@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class OrderStatusUpdate extends BaseItem{
+public class OrderStatusUpdate extends BaseItem {
 
     private UUID orderId;
     private String customerRef;

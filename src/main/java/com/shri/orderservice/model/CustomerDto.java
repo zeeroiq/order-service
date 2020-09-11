@@ -5,9 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-import java.util.UUID;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +12,5 @@ import java.util.UUID;
 public class CustomerDto extends BaseItem {
 
     private String customerName;
-    private UUID apiKey;
-    private Set<BeerOrderDto> beerOrderDtos;
+
 }
