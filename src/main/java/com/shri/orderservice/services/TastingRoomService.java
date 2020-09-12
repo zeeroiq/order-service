@@ -4,6 +4,7 @@
 
 package com.shri.orderservice.services;
 
+import com.shri.orderservice.bootstrap.BootstrapBeerOrder;
 import com.shri.orderservice.domain.Customer;
 import com.shri.orderservice.model.BeerOrderDto;
 import com.shri.orderservice.model.BeerOrderLineDto;
@@ -34,9 +35,9 @@ public class TastingRoomService {
         this.customerRepository = customerRepository;
         this.beerOrderService = beerOrderService;
         this.beerOrderRepository = beerOrderRepository;
-        beerUpcs.add(BeerOrderBootstrap.BEER_1_UPC);
-        beerUpcs.add(BeerOrderBootstrap.BEER_2_UPC);
-        beerUpcs.add(BeerOrderBootstrap.BEER_3_UPC);
+        beerUpcs.add(BootstrapBeerOrder.BEER_1_UPC);
+        beerUpcs.add(BootstrapBeerOrder.BEER_2_UPC);
+        beerUpcs.add(BootstrapBeerOrder.BEER_3_UPC);
     }
 
     @Transactional
