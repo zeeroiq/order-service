@@ -1,10 +1,10 @@
 package com.shri.orderservice.domain;
 
 import com.shri.orderservice.domain.enums.OrderStatusEnum;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -17,7 +17,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@Builder
+@SuperBuilder
 @Entity
 public class BeerOrder extends BaseEntity {
 

@@ -1,6 +1,7 @@
 .gradle
 .idea
 order-service.iml
+build
 # Compiled class file
 *.class
 

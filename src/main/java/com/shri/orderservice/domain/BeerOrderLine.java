@@ -5,8 +5,8 @@
 package com.shri.orderservice.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
@@ -15,11 +15,12 @@ import javax.persistence.ManyToOne;
 import java.util.UUID;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Builder
-public class BeerOrderLine extends BaseEntity{
+@SuperBuilder
+public class BeerOrderLine extends BaseEntity {
 
     @ManyToOne
     private BeerOrder beerOrder;
