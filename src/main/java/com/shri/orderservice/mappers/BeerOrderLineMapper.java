@@ -8,7 +8,7 @@ import com.shri.orderservice.domain.BeerOrderLine;
 import com.shri.orderservice.model.BeerOrderLineDto;
 import org.mapstruct.Mapper;
 
-@Mapper(uses = DateMapper.class)
+@Mapper(uses = {DateMapper.class})
 public interface BeerOrderLineMapper {
 
     BeerOrderLineDto beerOrderLineToDto(BeerOrderLine orderLine);
