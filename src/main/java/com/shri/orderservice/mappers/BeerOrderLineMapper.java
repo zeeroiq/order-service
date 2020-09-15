@@ -6,9 +6,11 @@ package com.shri.orderservice.mappers;
 
 import com.shri.orderservice.domain.BeerOrderLine;
 import com.shri.orderservice.model.BeerOrderLineDto;
+import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 
 @Mapper(uses = {DateMapper.class})
+@DecoratedWith(BeerOrderLineMapperDecorator.class)
 public interface BeerOrderLineMapper {
 
     BeerOrderLineDto beerOrderLineToDto(BeerOrderLine orderLine);

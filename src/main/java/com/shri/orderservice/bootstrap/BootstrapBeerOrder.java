@@ -7,11 +7,13 @@ package com.shri.orderservice.bootstrap;
 import com.shri.orderservice.domain.Customer;
 import com.shri.orderservice.repositories.CustomerRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class BootstrapBeerOrder implements CommandLineRunner {
@@ -34,5 +36,7 @@ public class BootstrapBeerOrder implements CommandLineRunner {
             .apiKey(UUID.randomUUID())
             .build());
         }
+
+        log.debug(">>>>>> adding customer tasting room");
     }
 }

@@ -6,6 +6,8 @@ package com.shri.orderservice.model;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.UUID;
 
 @Data
@@ -15,8 +17,10 @@ import java.util.UUID;
 @Builder
 public class BeerOrderLineDto extends BaseItem {
 
-    private UUID uuid;
+    private UUID beerId;
     private String name;
+    private String beerStyle;
     private String upc;
     private Integer orderQuantity = 0;
+    private BigDecimal price;
 }
