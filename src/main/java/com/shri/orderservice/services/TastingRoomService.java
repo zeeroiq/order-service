@@ -52,7 +52,7 @@ public class TastingRoomService {
     }
 
     private void doPlaceOrder(Customer customer) {
-
+        // placing the order based on upc
         String beerToOrder = getRandomBeerUpc();
         BeerOrderLineDto beerOrderLine = BeerOrderLineDto.builder()
                 .upc(beerToOrder)
