@@ -1,6 +1,11 @@
-server:
-  port: 8081
+spring:
+  datasource:
+    username: order_service
+    password: password
+    url: jdbc:mysql://127.0.0.1:3306/orderservice?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
 
-com:
-  zeero:
-    beer-service-host: http://localhost:8080
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
