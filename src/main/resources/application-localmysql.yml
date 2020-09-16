@@ -1,0 +1,6 @@
+server:
+  port: 8081
+
+com:
+  zeero:
+    beer-service-host: http://localhost:8080
