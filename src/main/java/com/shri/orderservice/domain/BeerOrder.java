@@ -1,9 +1,8 @@
 package com.shri.orderservice.domain;
 
 import com.shri.orderservice.domain.enums.OrderStatusEnum;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -12,14 +11,16 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import java.io.Serializable;
 import java.util.Set;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @SuperBuilder
 @Entity
-public class BeerOrder extends BaseEntity {
+public class BeerOrder extends BaseEntity implements Serializable {
+
+    private static final long serialVersionUID = -5854220244751728972L;
 
     private String customerReference;
     @ManyToOne
