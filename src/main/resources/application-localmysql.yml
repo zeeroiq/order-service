@@ -25,3 +25,18 @@ spring:
     properties:
       hibernate:
         diaect: org.hibernate.dialect.MySQL8Dialect
+
+# enable logging for config troubleshooting
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+    com:
+      zaxxer:
+        hikari:
+          HikariConfig: DEBUG
