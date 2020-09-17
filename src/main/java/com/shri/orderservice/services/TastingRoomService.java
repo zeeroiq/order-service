@@ -42,8 +42,8 @@ public class TastingRoomService {
 
     @Transactional
     @Scheduled(fixedRate = 2000)
-    public void placeTastingRoomOrde() {
-        List<Customer> customers = customerRepository.findAllCustomerNameLike(BootstrapBeerOrder.TASTING_ROOM);
+    public void placeTastingRoomOrder() {
+        List<Customer> customers = customerRepository.findAllByCustomerNameLike(BootstrapBeerOrder.TASTING_ROOM);
         if (customers.size() == 1) {
             doPlaceOrder(customers.get(0));
         } else {
