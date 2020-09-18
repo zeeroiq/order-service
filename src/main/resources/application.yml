@@ -4,3 +4,9 @@ server:
 com:
   zeero:
     beer-service-host: http://localhost:8080
+
+# artemis configuration
+spring:
+  artemis:
+    user: artemis
+    password: simetraehcapa
