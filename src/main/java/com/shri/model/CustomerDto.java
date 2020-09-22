@@ -1,4 +1,8 @@
-package com.shri.orderservice.model;
+/*
+ * Created by zeeroiq on 9/23/20, 12:42 AM
+ */
+
+package com.shri.model;
 
 import lombok.*;
 

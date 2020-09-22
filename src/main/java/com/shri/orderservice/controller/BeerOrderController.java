@@ -4,8 +4,8 @@
 
 package com.shri.orderservice.controller;
 
-import com.shri.orderservice.model.BeerOrderDto;
-import com.shri.orderservice.model.BeerOrderPagedList;
+import com.shri.model.BeerOrderDto;
+import com.shri.model.BeerOrderPagedList;
 import com.shri.orderservice.services.BeerOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;

@@ -4,8 +4,8 @@
 
 package com.shri.orderservice.services;
 
-import com.shri.orderservice.model.BeerOrderDto;
-import com.shri.orderservice.model.BeerOrderPagedList;
+import com.shri.model.BeerOrderDto;
+import com.shri.model.BeerOrderPagedList;
 import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;

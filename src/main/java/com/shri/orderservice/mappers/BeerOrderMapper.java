@@ -5,7 +5,7 @@
 package com.shri.orderservice.mappers;
 
 import com.shri.orderservice.domain.BeerOrder;
-import com.shri.orderservice.model.BeerOrderDto;
+import com.shri.model.BeerOrderDto;
 import org.mapstruct.Mapper;
 
 @Mapper(uses = {DateMapper.class, BeerOrderLineMapper.class})

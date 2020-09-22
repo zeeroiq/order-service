@@ -6,8 +6,8 @@ package com.shri.orderservice.services;
 
 import com.shri.orderservice.bootstrap.BootstrapBeerOrder;
 import com.shri.orderservice.domain.Customer;
-import com.shri.orderservice.model.BeerOrderDto;
-import com.shri.orderservice.model.BeerOrderLineDto;
+import com.shri.model.BeerOrderDto;
+import com.shri.model.BeerOrderLineDto;
 import com.shri.orderservice.repositories.BeerOrderRepository;
 import com.shri.orderservice.repositories.CustomerRepository;
 import lombok.extern.slf4j.Slf4j;

@@ -1,8 +1,12 @@
 /*
+ * Created by zeeroiq on 9/23/20, 12:42 AM
+ */
+
+/*
  * Created by zeeroiq on 9/12/20, 4:04 AM
  */
 
-package com.shri.orderservice.model;
+package com.shri.model;
 
 import lombok.*;
 

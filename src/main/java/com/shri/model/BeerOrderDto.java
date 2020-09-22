@@ -1,6 +1,10 @@
-package com.shri.orderservice.model;
+/*
+ * Created by zeeroiq on 9/23/20, 12:42 AM
+ */
 
-import com.shri.orderservice.model.enums.OrderStatusEnum;
+package com.shri.model;
+
+import com.shri.model.enums.OrderStatusEnum;
 import lombok.*;
 
 import java.util.List;

@@ -1,8 +1,12 @@
 /*
+ * Created by zeeroiq on 9/23/20, 12:42 AM
+ */
+
+/*
  * Created by zeeroiq on 9/13/20, 1:43 AM
  */
 
-package com.shri.orderservice.model;
+package com.shri.model;
 
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

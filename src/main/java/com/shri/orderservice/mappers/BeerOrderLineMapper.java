@@ -5,7 +5,7 @@
 package com.shri.orderservice.mappers;
 
 import com.shri.orderservice.domain.BeerOrderLine;
-import com.shri.orderservice.model.BeerOrderLineDto;
+import com.shri.model.BeerOrderLineDto;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 

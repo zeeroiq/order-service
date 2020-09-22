@@ -4,7 +4,7 @@
 
 package com.shri.orderservice.services.beer;
 
-import com.shri.orderservice.model.BeerDto;
+import com.shri.model.BeerDto;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
