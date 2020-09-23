@@ -1,9 +1,14 @@
 /*
+ * Created by zeeroiq on 9/24/20, 12:34 AM
+ */
+
+/*
  * Created by zeeroiq on 9/23/20, 11:45 PM
  */
 
-package com.shri.orderservice.services;
+package com.shri.orderservice.services.sm;
 
+import com.shri.orderservice.config.sm.OrderStateInterceptor;
 import com.shri.orderservice.domain.BeerOrder;
 import com.shri.orderservice.domain.enums.OrderEventEnum;
 import com.shri.orderservice.domain.enums.OrderStatusEnum;
@@ -20,8 +25,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class OrderManagerImpl implements OrderManager {
 
+    public static final String ORDER_ID_HEADER = "ORDER_ID_HEADER";
     private final StateMachineFactory<OrderStatusEnum, OrderEventEnum> stateMachineFactory;
     private final BeerOrderRepository orderRepository;
+    private final OrderStateInterceptor orderStateInterceptor;
 
     @Override
     public BeerOrder newBeerOrder(BeerOrder beerOrder) {
@@ -46,6 +53,7 @@ public class OrderManagerImpl implements OrderManager {
         stateMachine.stop();
         stateMachine.getStateMachineAccessor()
                 .doWithAllRegions(sma -> {
+                    sma.addStateMachineInterceptor(orderStateInterceptor);
                     sma.resetStateMachine(new DefaultStateMachineContext<>(savedBeer.getOrderStatus(), null, null, null));
                 });
         stateMachine.start();

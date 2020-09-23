@@ -1,8 +1,12 @@
+/*
+ * Created by zeeroiq on 9/24/20, 12:26 AM
+ */
+
 /**
  * Created by zeeroiq on 9/23/20, 12:07 AM
  */
 
-package com.shri.orderservice.config;
+package com.shri.orderservice.config.sm;
 
 import com.shri.orderservice.domain.enums.OrderEventEnum;
 import com.shri.orderservice.domain.enums.OrderStatusEnum;
