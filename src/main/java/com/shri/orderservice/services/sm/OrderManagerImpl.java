@@ -21,6 +21,8 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @RequiredArgsConstructor
 @Service
 public class OrderManagerImpl implements OrderManager {
@@ -38,6 +40,14 @@ public class OrderManagerImpl implements OrderManager {
 
         sendBeerOrderEvent(savedBeer, OrderEventEnum.VALIDATE_ORDER);
         return savedBeer;
+    }
+
+    @Override
+    public void processValidationResult(UUID orderId, Boolean isValid) {
+        BeerOrder beerOrder = orderRepository.getOne(orderId);
+        sendBeerOrderEvent(beerOrder, isValid
+                                        ? OrderEventEnum.VALIDATION_PASSED
+                                        : OrderEventEnum.VALIDATION_FAILED);
     }
 
     private void sendBeerOrderEvent(BeerOrder savedBeer, OrderEventEnum enumValidateOrder) {
