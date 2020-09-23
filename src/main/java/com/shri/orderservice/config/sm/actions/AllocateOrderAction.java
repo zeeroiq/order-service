@@ -1,10 +1,9 @@
 /*
- * Created by zeeroiq on 9/24/20, 12:59 AM
+ * Created by zeeroiq on 9/24/20, 2:32 AM
  */
 
 package com.shri.orderservice.config.sm.actions;
 
-import com.shri.model.events.ValidateOrderRequest;
 import com.shri.orderservice.config.JmsConfig;
 import com.shri.orderservice.domain.BeerOrder;
 import com.shri.orderservice.domain.enums.OrderEventEnum;
@@ -14,7 +13,6 @@ import com.shri.orderservice.repositories.BeerOrderRepository;
 import com.shri.orderservice.services.sm.OrderManagerImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
@@ -25,22 +23,19 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class ValidateOrderAction implements Action<OrderStatusEnum, OrderEventEnum> {
+public class AllocateOrderAction implements Action<OrderStatusEnum, OrderEventEnum> {
 
-    private final BeerOrderRepository orderRepository;
-    private final BeerOrderMapper orderMapper;
     private final JmsTemplate jmsTemplate;
+    private final BeerOrderRepository beerOrderRepository;
+    private final BeerOrderMapper beerOrderMapper;
 
     @Override
-    @JmsListener(destination = JmsConfig.VALIDATE_ORDER_RESPONSE_QUEUE)
     public void execute(StateContext<OrderStatusEnum, OrderEventEnum> context) {
-        String beerOrderId = (String) context.getMessageHeader(OrderManagerImpl.class);
-        BeerOrder beerOrder = orderRepository.findOneById(UUID.fromString(beerOrderId));
+        String beerOrderId = (String)context.getMessageHeader(OrderManagerImpl.ORDER_ID_HEADER);
+        BeerOrder beerOrder = beerOrderRepository.findOneById(UUID.fromString(beerOrderId));
 
-        jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_QUEUE, ValidateOrderRequest.builder()
-                .beerOrder(orderMapper.beerOrderToDto(beerOrder))
-                .build()
-        );
-        log.debug(">>>>> Sent Validation request to queue for order id " + beerOrderId);
+        jmsTemplate.convertAndSend(JmsConfig.ALLOCATE_ORDER_QUEUE,
+                beerOrderMapper.beerOrderToDto(beerOrder));
+        log.debug(">>>>> Sent allocation request for order id: " + beerOrderId);
     }
 }

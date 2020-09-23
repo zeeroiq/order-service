@@ -5,9 +5,11 @@
 package com.shri.orderservice.services.listeners;
 
 import com.shri.model.events.ValidateOrderResult;
+import com.shri.orderservice.config.JmsConfig;
 import com.shri.orderservice.services.sm.OrderManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -18,7 +20,7 @@ import java.util.UUID;
 public class ValidationResultListener {
     private final OrderManager orderManager;
 
-
+    @JmsListener(destination = JmsConfig.VALIDATE_ORDER_RESPONSE_QUEUE)
     public void listen(ValidateOrderResult result) {
         final UUID orderId = result.getOrderId();
         log.debug(">>>>> validation result for orderId: " + orderId);

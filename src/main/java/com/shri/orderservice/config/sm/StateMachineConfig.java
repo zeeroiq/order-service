@@ -10,7 +10,9 @@ package com.shri.orderservice.config.sm;
 
 import com.shri.orderservice.domain.enums.OrderEventEnum;
 import com.shri.orderservice.domain.enums.OrderStatusEnum;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.statemachine.action.Action;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
@@ -18,9 +20,13 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.EnumSet;
 
+@RequiredArgsConstructor
 @Configuration
 @EnableStateMachineFactory
 public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderStatusEnum, OrderEventEnum> {
+
+    private final Action<OrderStatusEnum, OrderEventEnum> validateOrderAction;
+    private final Action<OrderStatusEnum, OrderEventEnum> allocateOrderRequest;
 
     @Override
     public void configure(StateMachineStateConfigurer<OrderStatusEnum, OrderEventEnum> states) throws Exception {
@@ -41,6 +47,7 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderStatu
         transitions.withExternal()
                 .source(OrderStatusEnum.NEW).target(OrderStatusEnum.VALIDATION_PENDING)
                 .event(OrderEventEnum.VALIDATE_ORDER)
+                .action(validateOrderAction)
                 .and()
                 .withExternal()
                 .source(OrderStatusEnum.NEW).target(OrderStatusEnum.VALIDATED)
@@ -48,6 +55,10 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderStatu
                 .and()
                 .withExternal()
                 .source(OrderStatusEnum.NEW).target(OrderStatusEnum.VALIDATION_EXCEPTION)
-                .event(OrderEventEnum.VALIDATION_FAILED);
+                .event(OrderEventEnum.VALIDATION_FAILED)
+                .and().withExternal()
+                .source(OrderStatusEnum.VALIDATED).target(OrderStatusEnum.ALLOCATION_PENDING)
+                .event(OrderEventEnum.VALIDATE_ORDER)
+                .action(allocateOrderRequest);
     }
 }

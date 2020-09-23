@@ -45,9 +45,14 @@ public class OrderManagerImpl implements OrderManager {
     @Override
     public void processValidationResult(UUID orderId, Boolean isValid) {
         BeerOrder beerOrder = orderRepository.getOne(orderId);
-        sendBeerOrderEvent(beerOrder, isValid
-                                        ? OrderEventEnum.VALIDATION_PASSED
-                                        : OrderEventEnum.VALIDATION_FAILED);
+        if (isValid) {
+            sendBeerOrderEvent(beerOrder, OrderEventEnum.VALIDATION_PASSED);
+            BeerOrder validatedOrder = orderRepository.findOneById(orderId);
+            sendBeerOrderEvent(validatedOrder, OrderEventEnum.ALLOCATED_ORDER);
+        } else {
+            sendBeerOrderEvent(beerOrder, OrderEventEnum.VALIDATION_FAILED);
+        }
+
     }
 
     private void sendBeerOrderEvent(BeerOrder savedBeer, OrderEventEnum enumValidateOrder) {
