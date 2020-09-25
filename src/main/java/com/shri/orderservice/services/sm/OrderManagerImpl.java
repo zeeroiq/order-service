@@ -8,6 +8,7 @@
 
 package com.shri.orderservice.services.sm;
 
+import com.shri.model.BeerOrderDto;
 import com.shri.orderservice.config.sm.OrderStateInterceptor;
 import com.shri.orderservice.domain.BeerOrder;
 import com.shri.orderservice.domain.enums.OrderEventEnum;
@@ -53,6 +54,40 @@ public class OrderManagerImpl implements OrderManager {
             sendBeerOrderEvent(beerOrder, OrderEventEnum.VALIDATION_FAILED);
         }
 
+    }
+
+    @Override
+    public void orderAllocationPassed(BeerOrderDto beerOrderDto) {
+        BeerOrder beerOrder = orderRepository.getOne(beerOrderDto.getId());
+        sendBeerOrderEvent(beerOrder, OrderEventEnum.ALLOCATION_SUCCESS);
+        updateAllocatedQuantity(beerOrderDto, beerOrder);
+    }
+
+    @Override
+    public void orderAllocationPendingInventory(BeerOrderDto beerOrderDto) {
+        BeerOrder beerOrder = orderRepository.getOne(beerOrderDto.getId());
+        sendBeerOrderEvent(beerOrder, OrderEventEnum.ALLOCATION_NO_INVENTORY);
+        updateAllocatedQuantity(beerOrderDto, beerOrder);
+    }
+
+    @Override
+    public void orderAllocationFailed(BeerOrderDto beerOrderDto) {
+        BeerOrder beerOrder = orderRepository.getOne(beerOrderDto.getId());
+        sendBeerOrderEvent(beerOrder, OrderEventEnum.ALLOCATION_FAILED);
+    }
+
+
+    private void updateAllocatedQuantity(BeerOrderDto beerOrderDto, BeerOrder beerOrder) {
+        BeerOrder allocatedOrder = orderRepository.getOne(beerOrderDto.getId());
+        allocatedOrder.getBeerOrderLines().forEach(orderLine -> {
+            beerOrderDto.getBeerOrderLines().forEach(beerOrderLineDto -> {
+                if (orderLine.getId().equals(beerOrderLineDto.getId())) {
+                    orderLine.setQuantityAllocated(beerOrderLineDto.getQuantityAllocated());
+                }
+            });
+        });
+
+        orderRepository.saveAndFlush(beerOrder);
     }
 
     private void sendBeerOrderEvent(BeerOrder savedBeer, OrderEventEnum enumValidateOrder) {
