@@ -22,6 +22,7 @@ import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -34,10 +35,11 @@ public class OrderManagerImpl implements OrderManager {
     private final OrderStateInterceptor orderStateInterceptor;
 
     @Override
+    @Transactional
     public BeerOrder newBeerOrder(BeerOrder beerOrder) {
         beerOrder.setId(null);
         beerOrder.setOrderStatus(OrderStatusEnum.NEW);
-        BeerOrder savedBeer = orderRepository.save(beerOrder);
+        BeerOrder savedBeer = orderRepository.saveAndFlush(beerOrder);
 
         sendBeerOrderEvent(savedBeer, OrderEventEnum.VALIDATE_ORDER);
         return savedBeer;
@@ -93,7 +95,9 @@ public class OrderManagerImpl implements OrderManager {
     private void sendBeerOrderEvent(BeerOrder savedBeer, OrderEventEnum enumValidateOrder) {
 
         StateMachine<OrderStatusEnum, OrderEventEnum> stateMachine = build(savedBeer);
-        Message<OrderEventEnum> msg = MessageBuilder.withPayload(enumValidateOrder).build();
+        Message<OrderEventEnum> msg = MessageBuilder.withPayload(enumValidateOrder)
+                .setHeader(ORDER_ID_HEADER, savedBeer.getId().toString())
+                .build();
         stateMachine.sendEvent(msg);
     }
 
