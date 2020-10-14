@@ -45,6 +45,7 @@ public class OrderManagerImpl implements OrderManager {
         return savedBeer;
     }
 
+    @Transactional
     @Override
     public void processValidationResult(UUID orderId, Boolean isValid) {
         BeerOrder beerOrder = orderRepository.getOne(orderId);

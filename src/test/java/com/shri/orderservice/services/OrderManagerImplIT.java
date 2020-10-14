@@ -76,7 +76,7 @@ public class OrderManagerImplIT {
         }
     }
     @Test
-    public void testNewAllocated() throws JsonProcessingException {
+    public void testNewAllocated() throws JsonProcessingException, InterruptedException {
         BeerDto beerDto = BeerDto.builder().id(beerId).upc("12345").build();
         BeerPagedList list = new BeerPagedList(Collections.singletonList(beerDto));
 
@@ -84,9 +84,13 @@ public class OrderManagerImplIT {
                         .willReturn(okJson(objectMapper.writeValueAsString(list))));
         BeerOrder beerOrder = createBeerOrder();
         BeerOrder order = orderManager.newBeerOrder(beerOrder);
-        assertNotNull(order);
+        System.out.println(">>>>> SLEEPING... >>>>>");
+        Thread.sleep(10000);
+        System.out.println(">>>>> AWAKENING... >>>>>");
 
-        assertEquals(OrderStatusEnum.ALLOCATED, order.getOrderStatus());
+        BeerOrder order2 = orderRepository.findOneById(order.getId());
+        assertNotNull(order);
+        assertEquals(OrderStatusEnum.ALLOCATED, order2.getOrderStatus());
     }
 
     public BeerOrder createBeerOrder() {

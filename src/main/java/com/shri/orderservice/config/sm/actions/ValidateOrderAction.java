@@ -11,6 +11,7 @@ import com.shri.orderservice.domain.enums.OrderEventEnum;
 import com.shri.orderservice.domain.enums.OrderStatusEnum;
 import com.shri.orderservice.mappers.BeerOrderMapper;
 import com.shri.orderservice.repositories.BeerOrderRepository;
+import com.shri.orderservice.services.sm.OrderManagerImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
@@ -33,8 +34,8 @@ public class ValidateOrderAction implements Action<OrderStatusEnum, OrderEventEn
     @Override
     @JmsListener(destination = JmsConfig.VALIDATE_ORDER_RESPONSE_QUEUE)
     public void execute(StateContext<OrderStatusEnum, OrderEventEnum> context) {
-        UUID beerOrderId = context.getMessage().getHeaders().getId();
-        BeerOrder beerOrder = orderRepository.findOneById(beerOrderId);
+        String beerOrderId = (String) context.getMessage().getHeaders().get(OrderManagerImpl.ORDER_ID_HEADER);
+        BeerOrder beerOrder = orderRepository.findOneById(UUID.fromString(beerOrderId));
 
         jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_QUEUE, ValidateOrderRequest.builder()
                 .beerOrder(orderMapper.beerOrderToDto(beerOrder))

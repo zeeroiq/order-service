@@ -10,3 +10,7 @@ spring:
   artemis:
     user: artemis
     password: simetraehcapa
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      write-date-as-timestamps-as-nanoseconds: true
