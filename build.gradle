@@ -36,6 +36,7 @@ dependencies {
     }
     testCompile "com.github.tomakehurst:wiremock-jre8:2.27.2"
     testCompile "org.apache.activemq:artemis-jms-server"
+    testCompile "org.awaitility:awaitility"
 }
 
 

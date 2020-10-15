@@ -32,6 +32,7 @@ import java.util.UUID;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.okJson;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -84,9 +85,12 @@ public class OrderManagerImplIT {
                         .willReturn(okJson(objectMapper.writeValueAsString(list))));
         BeerOrder beerOrder = createBeerOrder();
         BeerOrder order = orderManager.newBeerOrder(beerOrder);
-        System.out.println(">>>>> SLEEPING... >>>>>");
-        Thread.sleep(10000);
-        System.out.println(">>>>> AWAKENING... >>>>>");
+
+        await().untilAsserted(() -> {
+            BeerOrder foundOrder = orderRepository.findById(order.getId()).get();
+            // TODO: ALLOCATED STATUS
+            assertEquals(OrderStatusEnum.ALLOCATION_PENDING, foundOrder.getOrderStatus());
+        });
 
         BeerOrder order2 = orderRepository.findOneById(order.getId());
         assertNotNull(order);
