@@ -68,7 +68,9 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderStatu
                     .event(OrderEventEnum.ALLOCATION_FAILED)
                 .and().withExternal()
                     .source(OrderStatusEnum.ALLOCATION_PENDING).target(OrderStatusEnum.PENDING_INVENTORY)
-                    .event(OrderEventEnum.ALLOCATION_NO_INVENTORY);
-
+                    .event(OrderEventEnum.ALLOCATION_NO_INVENTORY)
+                .and().withExternal()
+                    .source(OrderStatusEnum.ALLOCATED).target(OrderStatusEnum.PICKED_UP)
+                    .event(OrderEventEnum.ORDER_PICKED_UP);
     }
 }
