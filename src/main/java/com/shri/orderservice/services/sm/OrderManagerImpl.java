@@ -101,6 +101,14 @@ public class OrderManagerImpl implements OrderManager {
 
     }
 
+    @Override
+    public void orderPickedUp(final UUID orderId) {
+        Optional<BeerOrder> orderOptional = orderRepository.findById(orderId);
+        orderOptional.ifPresentOrElse(beerOrder -> {
+            sendBeerOrderEvent(beerOrder, OrderEventEnum.ORDER_PICKED_UP);
+            log.debug(">>>>> Order PICKED UP. Order Id: " + beerOrder.getId());
+        }, () -> log.error("Order Not found to be picked up. Order Id: "+ orderId));
+    }
 
     private void updateAllocatedQuantity(BeerOrderDto beerOrderDto) {
         Optional<BeerOrder> allocatedOrderOptional = orderRepository.findById(beerOrderDto.getId());
@@ -147,7 +155,7 @@ public class OrderManagerImpl implements OrderManager {
         AtomicInteger loopCount = new AtomicInteger(0);
 
         while(!found.get()) {
-            if(loopCount.incrementAndGet() > 20) {
+            if(loopCount.incrementAndGet() > 10) {
                 found.set(true);
                 log.debug(">>>>> Loop Retries exceeds");
             }

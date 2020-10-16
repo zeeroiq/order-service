@@ -22,4 +22,5 @@ public interface OrderManager {
     void orderAllocationPendingInventory(BeerOrderDto beerOrderDto);
     void orderAllocationFailed(BeerOrderDto beerOrderDto);
 
+    void orderPickedUp(UUID id);
 }
