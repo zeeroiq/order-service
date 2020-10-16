@@ -12,6 +12,7 @@ import com.shri.model.BeerOrderDto;
 import com.shri.model.BeerOrderPagedList;
 import com.shri.orderservice.repositories.BeerOrderRepository;
 import com.shri.orderservice.repositories.CustomerRepository;
+import com.shri.orderservice.services.sm.OrderManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,7 @@ public class BeerOrderServiceImpl implements BeerOrderService {
     private final BeerOrderRepository beerOrderRepository;
     private final CustomerRepository customerRepository;
     private final BeerOrderMapper beerOrderMapper;
+    private final OrderManager orderManager;
 
 
     @Override
@@ -66,7 +68,7 @@ public class BeerOrderServiceImpl implements BeerOrderService {
             beerOrder.setOrderStatus(OrderStatusEnum.NEW);
             // fetch all the beer order lines and for all order line set it to the current beerOrder
             beerOrder.getBeerOrderLines().forEach(orderLine -> orderLine.setBeerOrder(beerOrder));
-            BeerOrder savedBeerOrder = beerOrderRepository.saveAndFlush(beerOrder);
+            BeerOrder savedBeerOrder = orderManager.newBeerOrder(beerOrder);
             log.info(">>>>> Saved beer order : " + savedBeerOrder.getId());
 
             return beerOrderMapper.beerOrderToDto(savedBeerOrder);
@@ -98,10 +100,7 @@ public class BeerOrderServiceImpl implements BeerOrderService {
 
     @Override
     public void pickupOrder(UUID customerId, UUID orderId) {
-        BeerOrder beerOrder = getOrder(customerId, orderId);
-        // once order is received set order status to be picked and save the state to the repository
-        beerOrder.setOrderStatus(OrderStatusEnum.PICKED_UP);
-        beerOrderRepository.saveAndFlush(beerOrder);
+        orderManager.orderPickedUp(orderId);
     }
 
 
