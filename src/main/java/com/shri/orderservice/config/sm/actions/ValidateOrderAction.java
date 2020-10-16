@@ -14,12 +14,12 @@ import com.shri.orderservice.repositories.BeerOrderRepository;
 import com.shri.orderservice.services.sm.OrderManagerImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -32,15 +32,17 @@ public class ValidateOrderAction implements Action<OrderStatusEnum, OrderEventEn
     private final JmsTemplate jmsTemplate;
 
     @Override
-    @JmsListener(destination = JmsConfig.VALIDATE_ORDER_RESPONSE_QUEUE)
+//    @JmsListener(destination = JmsConfig.VALIDATE_ORDER_RESPONSE_QUEUE)
     public void execute(StateContext<OrderStatusEnum, OrderEventEnum> context) {
         String beerOrderId = (String) context.getMessage().getHeaders().get(OrderManagerImpl.ORDER_ID_HEADER);
-        BeerOrder beerOrder = orderRepository.findOneById(UUID.fromString(beerOrderId));
+        Optional<BeerOrder> beerOrderOptional = orderRepository.findById(UUID.fromString(beerOrderId));
 
-        jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_QUEUE, ValidateOrderRequest.builder()
-                .beerOrder(orderMapper.beerOrderToDto(beerOrder))
-                .build()
-        );
+        beerOrderOptional.ifPresentOrElse(beerOrder -> {
+            jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_QUEUE, ValidateOrderRequest.builder()
+                    .beerOrder(orderMapper.beerOrderToDto(beerOrder))
+                    .build());
+        }, () -> log.error("Order Not Found. Id: " + beerOrderId));
+
         log.debug(">>>>> Sent Validation request to queue for order id " + beerOrderId);
     }
 }

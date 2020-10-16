@@ -37,7 +37,7 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderStatu
                 .end(OrderStatusEnum.PICKED_UP)
                 .end(OrderStatusEnum.DELIVERED)
                 .end(OrderStatusEnum.DELIVERED_EXCEPTION)
-                .end(OrderStatusEnum.VALIDATED)
+                .end(OrderStatusEnum.VALIDATION_EXCEPTION)
                 .end(OrderStatusEnum.ALLOCATION_EXCEPTION);
     }
 
@@ -45,30 +45,30 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderStatu
     public void configure(StateMachineTransitionConfigurer<OrderStatusEnum, OrderEventEnum> transitions) throws Exception {
 
         transitions.withExternal()
-                .source(OrderStatusEnum.NEW).target(OrderStatusEnum.VALIDATION_PENDING)
-                .event(OrderEventEnum.VALIDATE_ORDER)
-                .action(validateOrderAction)
+                    .source(OrderStatusEnum.NEW).target(OrderStatusEnum.VALIDATION_PENDING)
+                    .event(OrderEventEnum.VALIDATE_ORDER)
+                    .action(validateOrderAction)
                 .and()
                 .withExternal()
-                .source(OrderStatusEnum.VALIDATION_PENDING).target(OrderStatusEnum.VALIDATED)
-                .event(OrderEventEnum.VALIDATION_PASSED)
+                    .source(OrderStatusEnum.VALIDATION_PENDING).target(OrderStatusEnum.VALIDATED)
+                    .event(OrderEventEnum.VALIDATION_PASSED)
                 .and()
                 .withExternal()
-                .source(OrderStatusEnum.VALIDATION_PENDING).target(OrderStatusEnum.VALIDATION_EXCEPTION)
-                .event(OrderEventEnum.VALIDATION_FAILED)
+                    .source(OrderStatusEnum.VALIDATION_PENDING).target(OrderStatusEnum.VALIDATION_EXCEPTION)
+                    .event(OrderEventEnum.VALIDATION_FAILED)
                 .and().withExternal()
-                .source(OrderStatusEnum.VALIDATED).target(OrderStatusEnum.ALLOCATION_PENDING)
-                .event(OrderEventEnum.VALIDATE_ORDER)
-                .action(allocateOrderAction)
+                    .source(OrderStatusEnum.VALIDATED).target(OrderStatusEnum.ALLOCATION_PENDING)
+                    .event(OrderEventEnum.ALLOCATED_ORDER)
+                    .action(allocateOrderAction)
                 .and().withExternal()
-                .source(OrderStatusEnum.ALLOCATION_PENDING).target(OrderStatusEnum.ALLOCATED)
-                .event(OrderEventEnum.ALLOCATION_SUCCESS)
+                    .source(OrderStatusEnum.ALLOCATION_PENDING).target(OrderStatusEnum.ALLOCATED)
+                    .event(OrderEventEnum.ALLOCATION_SUCCESS)
                 .and().withExternal()
-                .source(OrderStatusEnum.ALLOCATION_PENDING).target(OrderStatusEnum.ALLOCATION_EXCEPTION)
-                .event(OrderEventEnum.ALLOCATION_FAILED)
+                    .source(OrderStatusEnum.ALLOCATION_PENDING).target(OrderStatusEnum.ALLOCATION_EXCEPTION)
+                    .event(OrderEventEnum.ALLOCATION_FAILED)
                 .and().withExternal()
-                .source(OrderStatusEnum.ALLOCATION_PENDING).target(OrderStatusEnum.PENDING_INVENTORY)
-                .event(OrderEventEnum.ALLOCATION_NO_INVENTORY);
+                    .source(OrderStatusEnum.ALLOCATION_PENDING).target(OrderStatusEnum.PENDING_INVENTORY)
+                    .event(OrderEventEnum.ALLOCATION_NO_INVENTORY);
 
     }
 }

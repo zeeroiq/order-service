@@ -19,7 +19,7 @@ public class OrderAllocationResultListener {
 
     private final OrderManager orderManager;
 
-    @JmsListener(destination = JmsConfig.ALLOCATE_ORDER_QUEUE)
+    @JmsListener(destination = JmsConfig.ALLOCATE_ORDER_RESPONSE_QUEUE)
     public void listen(AllocateOrderResult result) {
         if(!result.getAllocationError() && !result.getPendingInventory()) {
             // normal allocation
