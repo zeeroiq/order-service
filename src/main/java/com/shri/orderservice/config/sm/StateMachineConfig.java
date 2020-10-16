@@ -27,7 +27,7 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderStatu
 
     private final Action<OrderStatusEnum, OrderEventEnum> validateOrderAction;
     private final Action<OrderStatusEnum, OrderEventEnum> allocateOrderAction;
-
+    private final Action<OrderStatusEnum, OrderEventEnum> validationFailureAction;
     @Override
     public void configure(StateMachineStateConfigurer<OrderStatusEnum, OrderEventEnum> states) throws Exception {
 
@@ -56,6 +56,7 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderStatu
                 .withExternal()
                     .source(OrderStatusEnum.VALIDATION_PENDING).target(OrderStatusEnum.VALIDATION_EXCEPTION)
                     .event(OrderEventEnum.VALIDATION_FAILED)
+                    .action(validationFailureAction)
                 .and().withExternal()
                     .source(OrderStatusEnum.VALIDATED).target(OrderStatusEnum.ALLOCATION_PENDING)
                     .event(OrderEventEnum.ALLOCATED_ORDER)
