@@ -29,6 +29,7 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderStatu
     private final Action<OrderStatusEnum, OrderEventEnum> allocateOrderAction;
     private final Action<OrderStatusEnum, OrderEventEnum> validationFailureAction;
     private final Action<OrderStatusEnum, OrderEventEnum> allocationFailureAction;
+    private final Action<OrderStatusEnum, OrderEventEnum> deallocateOrderAction;
     @Override
     public void configure(StateMachineStateConfigurer<OrderStatusEnum, OrderEventEnum> states) throws Exception {
 
@@ -91,6 +92,7 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderStatu
                 .and()
                 .withExternal()
                     .source(OrderStatusEnum.ALLOCATED).target(OrderStatusEnum.CANCELLED)
-                    .event(OrderEventEnum.CANCEL_ORDER);
+                    .event(OrderEventEnum.CANCEL_ORDER)
+                    .action(deallocateOrderAction);
     }
 }
