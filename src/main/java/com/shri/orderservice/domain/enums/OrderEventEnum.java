@@ -8,7 +8,8 @@ public enum OrderEventEnum {
     ALLOCATION_SUCCESS(4),
     ALLOCATION_NO_INVENTORY(5),
     ALLOCATION_FAILED(6),
-    ORDER_PICKED_UP(7);
+    ORDER_PICKED_UP(7),
+    CANCEL_ORDER(8);
 
     private int orderEvent;
 
