@@ -26,16 +26,23 @@ public class OrderAllocationListener {
 
         boolean pendingInventory = false;
         boolean allocationException = false;
+        boolean sendResponse = true;
 
         AllocateOrderRequest request = (AllocateOrderRequest) msg.getPayload();
-        // set pending inventory
-        if(request.getBeerOrderDto().getCustomerReference() != null && request.getBeerOrderDto().getCustomerReference().equals("pending-allocation")) {
-            pendingInventory = true;
+        if(request.getBeerOrderDto().getCustomerReference() != null) {
+            // set pending inventory
+            if(request.getBeerOrderDto().getCustomerReference().equals("pending-allocation")) {
+                pendingInventory = true;
+            }
+            // set allocation error
+            if(request.getBeerOrderDto().getCustomerReference().equals("fail-allocation")) {
+                allocationException = true;
+            }
+            else if(request.getBeerOrderDto().getCustomerReference().equals("dont-allocate")) {
+                sendResponse = false;
+            }
         }
-        // set allocation error
-        if(request.getBeerOrderDto().getCustomerReference() != null && request.getBeerOrderDto().getCustomerReference().equals("fail-allocation")) {
-            allocationException = true;
-        }
+
         final boolean finalPendingInventory = pendingInventory;
         request.getBeerOrderDto().getBeerOrderLines()
                 .forEach(beerOrderLineDto -> {
@@ -46,11 +53,13 @@ public class OrderAllocationListener {
                     }
                 });
 
-        jmsTemplate.convertAndSend(JmsConfig.ALLOCATE_ORDER_RESPONSE_QUEUE,
-                AllocateOrderResult.builder()
-                .beerOrderDto(request.getBeerOrderDto())
-                .pendingInventory(pendingInventory)
-                .allocationError(allocationException)
-                .build());
+        if (sendResponse) {
+            jmsTemplate.convertAndSend(JmsConfig.ALLOCATE_ORDER_RESPONSE_QUEUE,
+                    AllocateOrderResult.builder()
+                            .beerOrderDto(request.getBeerOrderDto())
+                            .pendingInventory(pendingInventory)
+                            .allocationError(allocationException)
+                            .build());
+        }
     }
 }

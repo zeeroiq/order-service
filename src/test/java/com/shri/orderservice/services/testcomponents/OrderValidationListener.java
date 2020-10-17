@@ -27,18 +27,24 @@ public class OrderValidationListener {
     @JmsListener(destination = JmsConfig.VALIDATE_ORDER_QUEUE)
     public void list(Message msg) {
         boolean isValid = true;
+        boolean sendResponse = true;
 
         ValidateOrderRequest request = (ValidateOrderRequest) msg.getPayload();
-        if(request.getBeerOrder().getCustomerReference() != null
-                && request.getBeerOrder().getCustomerReference().equals("fail-validation")) {
-            isValid = false;
-        }
-        jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_RESPONSE_QUEUE,
-                ValidateOrderResult.builder()
-                        .isValid(isValid)
-                        .orderId(request.getBeerOrder().getId())
-                    .build());
-        System.out.println(">>>> AFTER VALIDATE_ORDER_RESPONSE_QUEUE >>>>>");
 
+        if(request.getBeerOrder().getCustomerReference() != null) {
+            if(request.getBeerOrder().getCustomerReference().equals("fail-validation")) {
+                isValid = false;
+            } else if(request.getBeerOrder().getCustomerReference().equals("dont-validate")) {
+                sendResponse = false;
+            }
+        }
+
+        if(sendResponse) {
+            jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_RESPONSE_QUEUE,
+                    ValidateOrderResult.builder()
+                            .isValid(isValid)
+                            .orderId(request.getBeerOrder().getId())
+                            .build());
+        }
     }
 }

@@ -11,7 +11,8 @@ public enum OrderStatusEnum {
     PENDING_INVENTORY(7),
     DELIVERED(8),
     DELIVERED_EXCEPTION(9),
-    PICKED_UP(10);
+    PICKED_UP(10),
+    CANCELLED(11);
 
     private int orderStatus;
 

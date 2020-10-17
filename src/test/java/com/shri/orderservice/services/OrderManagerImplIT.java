@@ -10,6 +10,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.shri.model.BeerDto;
 import com.shri.model.BeerPagedList;
 import com.shri.model.events.AllocationFailureEvent;
+import com.shri.model.events.DeallocateOrderRequest;
 import com.shri.orderservice.config.JmsConfig;
 import com.shri.orderservice.domain.BeerOrder;
 import com.shri.orderservice.domain.BeerOrderLine;
@@ -183,6 +184,79 @@ public class OrderManagerImplIT {
         });
     }
 
+    @Test
+    public void testValidationPendingToCancel() throws JsonProcessingException {
+        BeerDto beerDto = BeerDto.builder().id(beerId).upc("12345").build();
+        wireMockServer.stubFor(get(BeerServiceImpl.BEER_UPC_PATH_V1 + "12345")
+        .willReturn(okJson(objectMapper.writeValueAsString(beerDto))));
+
+        BeerOrder beerOrder = createBeerOrder();
+        beerOrder.setCustomerReference("dont-validate");
+        BeerOrder savedOrder = orderManager.newBeerOrder(beerOrder);
+
+        await().untilAsserted(() -> {
+            BeerOrder foundOrder = orderRepository.findById(beerOrder.getId()).get();
+            assertEquals(OrderStatusEnum.VALIDATION_PENDING, foundOrder.getOrderStatus());
+        });
+
+        orderManager.cancelOrder(savedOrder.getId());
+
+        await().untilAsserted(() -> {
+            BeerOrder foundOrder = orderRepository.findById(beerOrder.getId()).get();
+            assertEquals(OrderStatusEnum.CANCELLED, foundOrder.getOrderStatus());
+        });
+    }
+
+    @Test
+    public void testAllocationPendingToCancel() throws JsonProcessingException {
+        BeerDto beerDto = BeerDto.builder().id(beerId).upc("12345").build();
+        wireMockServer.stubFor(get(BeerServiceImpl.BEER_UPC_PATH_V1 + "12345")
+        .willReturn(okJson(objectMapper.writeValueAsString(beerDto))));
+
+        BeerOrder beerOrder = createBeerOrder();
+        beerOrder.setCustomerReference("dont-allocate");
+        BeerOrder savedOrder = orderManager.newBeerOrder(beerOrder);
+
+        await().untilAsserted(() -> {
+            BeerOrder foundOrder = orderRepository.findById(beerOrder.getId()).get();
+            assertEquals(OrderStatusEnum.ALLOCATION_PENDING, foundOrder.getOrderStatus());
+        });
+
+        orderManager.cancelOrder(savedOrder.getId());
+
+        await().untilAsserted(() -> {
+            BeerOrder foundOrder = orderRepository.findById(beerOrder.getId()).get();
+            assertEquals(OrderStatusEnum.CANCELLED, foundOrder.getOrderStatus());
+        });
+    }
+
+    @Test
+    public void testAllocatedToCancel() throws JsonProcessingException {
+        BeerDto beerDto = BeerDto.builder().id(beerId).upc("12345").build();
+        wireMockServer.stubFor(get(BeerServiceImpl.BEER_UPC_PATH_V1 + "12345")
+        .willReturn(okJson(objectMapper.writeValueAsString(beerDto))));
+
+        BeerOrder beerOrder = createBeerOrder();
+        BeerOrder savedOrder = orderManager.newBeerOrder(beerOrder);
+
+        await().untilAsserted(() -> {
+            BeerOrder foundOrder = orderRepository.findById(beerOrder.getId()).get();
+            assertEquals(OrderStatusEnum.ALLOCATED, foundOrder.getOrderStatus());
+        });
+
+        orderManager.cancelOrder(savedOrder.getId());
+
+        await().untilAsserted(() -> {
+            BeerOrder foundOrder = orderRepository.findById(beerOrder.getId()).get();
+            assertEquals(OrderStatusEnum.CANCELLED, foundOrder.getOrderStatus());
+        });
+
+        DeallocateOrderRequest deallocateOrderRequest = (DeallocateOrderRequest) jmsTemplate
+                .receiveAndConvert(JmsConfig.DEALLOCATE_ORDER_QUEUE);
+
+        assertNotNull(deallocateOrderRequest);
+        assertThat(deallocateOrderRequest.getBeerOrderDto().getId()).isEqualTo(savedOrder.getId());
+    }
 
     public BeerOrder createBeerOrder() {
         BeerOrder beerOrder = BeerOrder.builder().customer(testCustomer).build();

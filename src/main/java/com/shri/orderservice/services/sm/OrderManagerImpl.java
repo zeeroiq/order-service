@@ -77,7 +77,7 @@ public class OrderManagerImpl implements OrderManager {
             sendBeerOrderEvent(beerOrder, OrderEventEnum.ALLOCATION_SUCCESS);
             awaitForStatus(beerOrder.getId(), OrderStatusEnum.ALLOCATED);
             updateAllocatedQuantity(beerOrderDto);
-        }, () -> log.error("Order Id not found: " + beerOrderDto.getId()));
+        }, () -> log.error(">>>>> Order Id not found: " + beerOrderDto.getId()));
     }
 
     @Override
@@ -87,7 +87,7 @@ public class OrderManagerImpl implements OrderManager {
             sendBeerOrderEvent(beerOrder, OrderEventEnum.ALLOCATION_NO_INVENTORY);
             awaitForStatus(beerOrder.getId(), OrderStatusEnum.PENDING_INVENTORY);
             updateAllocatedQuantity(beerOrderDto);
-        }, () -> log.error("Order Id not found: " + beerOrderDto.getId()));
+        }, () -> log.error(">>>>>> Order Id not found: " + beerOrderDto.getId()));
 
     }
 
@@ -97,7 +97,7 @@ public class OrderManagerImpl implements OrderManager {
 
         beerOrderOptional.ifPresentOrElse(beerOrder -> {
             sendBeerOrderEvent(beerOrder, OrderEventEnum.ALLOCATION_FAILED);
-        }, () -> log.error("Order Not Found. Id: " + beerOrderDto.getId()) );
+        }, () -> log.error(">>>>> Order Not Found. Id: " + beerOrderDto.getId()) );
 
     }
 
@@ -107,7 +107,14 @@ public class OrderManagerImpl implements OrderManager {
         orderOptional.ifPresentOrElse(beerOrder -> {
             sendBeerOrderEvent(beerOrder, OrderEventEnum.ORDER_PICKED_UP);
             log.debug(">>>>> Order PICKED UP. Order Id: " + beerOrder.getId());
-        }, () -> log.error("Order Not found to be picked up. Order Id: "+ orderId));
+        }, () -> log.error(">>>>> Order Not found to be picked up. Order Id: "+ orderId));
+    }
+
+    @Override
+    public void cancelOrder(UUID id) {
+        orderRepository.findById(id).ifPresentOrElse(beerOrder -> {
+            sendBeerOrderEvent(beerOrder, OrderEventEnum.CANCEL_ORDER);
+        }, () -> log.error(">>>>> Order Not Found. Order Id: " + id));
     }
 
     private void updateAllocatedQuantity(BeerOrderDto beerOrderDto) {
@@ -123,7 +130,7 @@ public class OrderManagerImpl implements OrderManager {
             });
 
             orderRepository.saveAndFlush(allocatedOrder);
-        }, () -> log.error("Order Id not found: " + beerOrderDto.getId()));
+        }, () -> log.error(">>>>> Order Id not found: " + beerOrderDto.getId()));
 
 
     }
@@ -168,11 +175,11 @@ public class OrderManagerImpl implements OrderManager {
                     log.debug(">>>>>> Order status not equal. Expected: " + statusEnum.name() + " Found"
                             + beerOrder.getOrderStatus().name());
                 }
-            }, () -> log.debug("OrderId not found"));
+            }, () -> log.debug(">>>>> OrderId not found"));
 
             if(!found.get()) {
                 try {
-                    log.debug("Sleeping for retry");
+                    log.debug(">>>>> Sleeping for retry");
                     Thread.sleep(100);
                 } catch (Exception e) {
                     log.error("<<<<< Exception occurred with reason: " + e.getLocalizedMessage());
