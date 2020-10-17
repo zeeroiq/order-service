@@ -157,6 +157,7 @@ public class OrderManagerImpl implements OrderManager {
         return stateMachine;
     }
 
+    // issue #62
     private void awaitForStatus(UUID orderId, OrderStatusEnum statusEnum) {
         AtomicBoolean found = new AtomicBoolean(false);
         AtomicInteger loopCount = new AtomicInteger(0);
