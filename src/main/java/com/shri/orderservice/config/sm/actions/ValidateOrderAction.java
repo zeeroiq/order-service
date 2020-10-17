@@ -32,7 +32,6 @@ public class ValidateOrderAction implements Action<OrderStatusEnum, OrderEventEn
     private final JmsTemplate jmsTemplate;
 
     @Override
-//    @JmsListener(destination = JmsConfig.VALIDATE_ORDER_RESPONSE_QUEUE)
     public void execute(StateContext<OrderStatusEnum, OrderEventEnum> context) {
         String beerOrderId = (String) context.getMessage().getHeaders().get(OrderManagerImpl.ORDER_ID_HEADER);
         Optional<BeerOrder> beerOrderOptional = orderRepository.findById(UUID.fromString(beerOrderId));

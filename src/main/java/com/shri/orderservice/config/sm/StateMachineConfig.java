@@ -28,6 +28,7 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderStatu
     private final Action<OrderStatusEnum, OrderEventEnum> validateOrderAction;
     private final Action<OrderStatusEnum, OrderEventEnum> allocateOrderAction;
     private final Action<OrderStatusEnum, OrderEventEnum> validationFailureAction;
+    private final Action<OrderStatusEnum, OrderEventEnum> allocationFailureAction;
     @Override
     public void configure(StateMachineStateConfigurer<OrderStatusEnum, OrderEventEnum> states) throws Exception {
 
@@ -67,6 +68,7 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<OrderStatu
                 .and().withExternal()
                     .source(OrderStatusEnum.ALLOCATION_PENDING).target(OrderStatusEnum.ALLOCATION_EXCEPTION)
                     .event(OrderEventEnum.ALLOCATION_FAILED)
+                    .action(allocationFailureAction)
                 .and().withExternal()
                     .source(OrderStatusEnum.ALLOCATION_PENDING).target(OrderStatusEnum.PENDING_INVENTORY)
                     .event(OrderEventEnum.ALLOCATION_NO_INVENTORY)
