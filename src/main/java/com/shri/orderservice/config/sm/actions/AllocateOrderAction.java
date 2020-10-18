@@ -40,6 +40,6 @@ public class AllocateOrderAction implements Action<OrderStatusEnum, OrderEventEn
             jmsTemplate.convertAndSend(JmsConfig.ALLOCATE_ORDER_QUEUE,
                     AllocateOrderRequest.builder().beerOrderDto(beerOrderMapper.beerOrderToDto(beerOrder)).build());
                     log.debug(">>>>> Sent allocation request for order id: " + beerOrderId);
-        }, () -> log.error("Order not Found..."));
+        }, () -> log.error(">>>>> Order not Found..."));
     }
 }

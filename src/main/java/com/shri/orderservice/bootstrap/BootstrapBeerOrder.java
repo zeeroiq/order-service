@@ -19,9 +19,12 @@ import java.util.UUID;
 public class BootstrapBeerOrder implements CommandLineRunner {
 
     public static final String TASTING_ROOM = "Tasting Room";
-    public static final String BEER_1_UPC = UUID.randomUUID().toString();
-    public static final String BEER_2_UPC = UUID.randomUUID().toString();
-    public static final String BEER_3_UPC = UUID.randomUUID().toString();
+//    public static final String BEER_1_UPC = UUID.randomUUID().toString();
+//    public static final String BEER_2_UPC = UUID.randomUUID().toString();
+//    public static final String BEER_3_UPC = UUID.randomUUID().toString();
+    public static final String BEER_1_UPC = "0631234200036";
+    public static final String BEER_2_UPC = "0631234300019";
+    public static final String BEER_3_UPC = "0631234200013";
 
     private final CustomerRepository customerRepository;
     @Override
@@ -30,11 +33,13 @@ public class BootstrapBeerOrder implements CommandLineRunner {
     }
 
     private void loadCustomerData() {
-        if(customerRepository.count() ==0) {
-            customerRepository.save(Customer.builder()
-            .customerName(TASTING_ROOM)
-            .apiKey(UUID.randomUUID())
-            .build());
+        if(customerRepository.findAllByCustomerNameLike(BootstrapBeerOrder.TASTING_ROOM).size() ==0) {
+            Customer savedCustomer = customerRepository.save(Customer.builder()
+                    .customerName(TASTING_ROOM)
+                    .apiKey(UUID.randomUUID())
+                    .build());
+            log.debug(">>>>> Tasting Room Customer id: " + savedCustomer.getId().toString());
+
         }
 
         log.debug(">>>>>> adding customer tasting room");

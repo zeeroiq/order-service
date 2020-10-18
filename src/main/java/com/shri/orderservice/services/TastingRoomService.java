@@ -48,6 +48,7 @@ public class TastingRoomService {
             doPlaceOrder(customers.get(0));
         } else {
             log.error("Too many or too few tasting room customers found");
+            customers.forEach(customer -> log.debug(">>>>> " + customer.toString()));
         }
     }
 

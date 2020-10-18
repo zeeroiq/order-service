@@ -21,20 +21,15 @@ public class OrderAllocationResultListener {
 
     @JmsListener(destination = JmsConfig.ALLOCATE_ORDER_RESPONSE_QUEUE)
     public void listen(AllocateOrderResult result) {
-        if(!result.getAllocationError() && !result.getPendingInventory()) {
-            // normal allocation
+        if(!result.getAllocationError() && !result.getPendingInventory()){
+            //allocated normally
             orderManager.orderAllocationPassed(result.getBeerOrderDto());
-        }
-        else if(!result.getAllocationError() && result.getPendingInventory()) {
-            // inventory pending
+        } else if(!result.getAllocationError() && result.getPendingInventory()) {
+            //pending inventory
             orderManager.orderAllocationPendingInventory(result.getBeerOrderDto());
-        }
-        else if(result.getAllocationError() && !result.getPendingInventory()) {
-            // error while allocation
+        } else if(result.getAllocationError()){
+            //allocation error
             orderManager.orderAllocationFailed(result.getBeerOrderDto());
-        }
-        else {
-            throw new RuntimeException("Problem while allocation of order : " + result);
         }
     }
 }
