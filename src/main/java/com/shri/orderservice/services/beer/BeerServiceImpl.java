@@ -5,6 +5,7 @@
 package com.shri.orderservice.services.beer;
 
 import com.shri.model.BeerDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @ConfigurationProperties("com.zeero")
 @Service
 public class BeerServiceImpl implements BeerService {
@@ -35,6 +37,7 @@ public class BeerServiceImpl implements BeerService {
 
     @Override
     public Optional<BeerDto> getBeerByUpc(String upc) {
+        log.debug(">>>>> Calling to beer-service for endpoint beerUPC/" + upc);
         return Optional.of(restTemplate.getForObject(beerServiceHost + BEER_UPC_PATH_V1 + upc, BeerDto.class));
     }
 
