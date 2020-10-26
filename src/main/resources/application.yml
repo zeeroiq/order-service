@@ -7,6 +7,8 @@ com:
 
 # artemis configuration
 spring:
+  application:
+    name: order-service
   artemis:
     user: artemis
     password: simetraehcapa
@@ -14,3 +16,4 @@ spring:
     serialization:
       write-dates-as-timestamps: false
       write-date-timestamps-as-nanoseconds: true
+
