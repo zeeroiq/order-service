@@ -16,4 +16,6 @@ spring:
     serialization:
       write-dates-as-timestamps: false
       write-date-timestamps-as-nanoseconds: true
-
+  # port configuration to zipkin
+  zipkin:
+    baseUrl: http://localhost:9411/
