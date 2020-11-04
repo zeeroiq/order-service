@@ -1,4 +1,9 @@
 spring:
+#  disable service discovery
+  cloud:
+    config:
+      discovery:
+        enabled: false
   datasource:
     username: order_service
     password: password
