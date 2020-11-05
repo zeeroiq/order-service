@@ -9,3 +9,9 @@ spring:
       # spring cloud config client security configuration
       username: CurrentUser
       password: thisPassword
+
+# eureka client configuration
+eureka:
+  client:
+    service-url:
+      defaultZone: http://netflix:eureka@localhost:8761/eureka
