@@ -5,3 +5,7 @@ spring:
     config:
       discovery:
         service-id: brewery-config
+      fail-fast: true
+      # spring cloud config client security configuration
+      username: CurrentUser
+      password: thisPassword
