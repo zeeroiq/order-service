@@ -53,9 +53,11 @@ bootJar {
         includeLayerTools = true
     }
 }
+
+String dockerHubUsernameProperty = findProperty('dockerHubUsername') ?: 'zeeroiq'
+String imageName = "${dockerHubUsernameProperty}/${project.name}:$version"
 docker {
-    name "${project.name}:${project.version}"
-    tag project.name, project.version as String
+    name imageName
     dockerfile file('src/main/docker/Dockerfile')
     files "build/libs/${bootJar.archiveFileName.get()}"
     buildArgs([JAR_FILE: bootJar.archiveFileName.get()] as Map<String, String>)
